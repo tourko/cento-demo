@@ -1,8 +1,16 @@
-# First step
+# Download the setup files
 
-1. Unpack `cento_demo_*.tar.gz` to `/opt`
+1. Download `cento-demo` files from GitHub:
 
-	`# tar zxvf cento_demo_*.tar.gz -C /opt`
+	`curl -L https://github.com/tourko/cento-demo/archive/refs/heads/main.zip -o cento-demo.zip`
+
+2. Convert `zip` to `tar.gz`:
+
+	`unzip cento-demo.zip -d demo && mv demo/cento-demo-* demo/cento && tar -czf cento-demo.tar.gz -C demo cento && rm -rf demo`
+
+3. Unpack `cento_demo.tar.gz` to `/opt/cento`
+
+	`# tar -xzvf cento_demo.tar.gz -C /opt`
 
 # Install and start Napatech driver
 
