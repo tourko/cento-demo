@@ -1,0 +1,30 @@
+Delete=All
+
+# Define hash modes
+HashMode[Priority=0; Layer4Type=TCP,UDP,SCTP] = Hash5TupleSorted
+HashMode[Priority=1; Layer3Type=IP] = Hash2TupleSorted
+
+// Pair of uplink and downlink ports
+Define UL_PORT = Macro("0")
+Define DL_PORT = Macro("1")
+
+Define TX_FORWARD = Macro("0x00")
+Define TX_DISCARD = Macro("0x08")
+
+Define NUMA    = Macro("0")
+Define STREAMS = Macro("(0..$MAX_STREAM)")
+
+Setup[NUMANode=NUMA] = StreamId==STREAMS
+
+Setup[TxDescriptor=DYN; TxPorts=UL_PORT,DL_PORT; TxPortPos=138; TxIgnorePos=141] = StreamId==STREAMS
+
+// Set TX pass/drop verdict, which is bit 4 of the NtDyn1Descr_s->color
+Assign[ColorMask=TX_FORWARD; Descriptor=DYN1] = Port==UL_PORT,DL_PORT
+
+// Set TX port value, which is the fist 3 bits of the NtDyn1Descr_s->color
+Assign[ColorMask=DL_PORT; Descriptor=DYN1] = Port==UL_PORT
+Assign[ColorMask=UL_PORT; Descriptor=DYN1] = Port==DL_PORT
+
+// Uplink and downlink packets for the same flow from both ports will end up in the same stream
+Assign[StreamId=STREAMS; Descriptor=DYN1] = Port==UL_PORT,DL_PORT
+

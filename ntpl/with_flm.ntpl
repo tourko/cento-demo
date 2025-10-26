@@ -1,0 +1,54 @@
+Delete = All
+
+// Pair of uplink and downlink ports
+Define UL_PORT = Macro("0")
+Define DL_PORT = Macro("1")
+
+Define NUMA    = Macro("0")
+Define STREAMS = Macro("(0..$MAX_STREAM)")
+
+Define TX_FORWARD = Macro("0x00")
+Define TX_DISCARD = Macro("0x08")
+
+Define FLM_HIT       = Macro("0x00")
+Define FLM_MISS      = Macro("0x10")
+Define FLM_UNHANDLED = Macro("0x20")
+
+Define FLM_DISCARD = Macro("3")
+Define FLM_FORWARD = Macro("4")
+
+Define isIPv4    = Macro("Layer3Protocol==IPv4")
+Define isTcpUdp  = Macro("Layer4Protocol==TCP,UDP")
+
+KeyType[Name=KT_4Tuple] = {32, 32, 16, 16}
+
+Define KeyDefProtoSpec = Macro("(Layer3Header[12]/32, Layer3Header[16]/32, Layer4Header[0]/16, Layer4Header[2]/16)")
+KeyDef[Name=KD_4Tuple; KeyType=KT_4Tuple; IpProtocolField=Outer; KeySort=Sorted] = KeyDefProtoSpec
+
+HashMode = Hash5TupleSorted
+
+Setup[NUMANode=NUMA] = StreamId == STREAMS
+
+// Tx port number is the first 3 bits of the NtDyn1Descr_s->color at offset 138 (0b000XXX)
+// Tx pass/drop verdict is bit 4 of the NtDyn1Descr_s->color at offset 141 (0b00X000)
+// FLM hit/miss/unhandled is the last 2 bits of the NtDyn1Descr_s->colod at offset 142 (0bXX0000)
+Setup[TxDescriptor=DYN; TxPorts=UL_PORT,DL_PORT; TxPortPos=138; TxIgnorePos=141] = StreamId==STREAMS
+
+// Set TX port value, which is the fist 3 bits of the NtDyn1Descr_s->color
+Assign[ColorMask=DL_PORT; Descriptor=DYN1] = Port==UL_PORT
+Assign[ColorMask=UL_PORT; Descriptor=DYN1] = Port==DL_PORT
+
+// Set TX pass/drop verdict, which is bit 4 of the NtDyn1Descr_s->color
+Assign[ColorMask=TX_FORWARD; Descriptor=DYN1] = Port==UL_PORT,DL_PORT
+
+// New and unhandled flows are sent to the host
+Assign[StreamId=STREAMS; ColorMask=FLM_UNHANDLED; Descriptor=DYN1] = Port==UL_PORT,DL_PORT AND isIPv4 AND isTcpUdp AND Key(KD_4Tuple, KeyID=1) == UNHANDLED
+Assign[StreamId=STREAMS; ColorMask=FLM_MISS;      Descriptor=DYN1] = Port==UL_PORT,DL_PORT AND isIPv4 AND isTcpUdp AND Key(KD_4Tuple, KeyID=1) == MISS
+
+// Drop discarded flows
+Assign[StreamId=Drop] = Port==UL_PORT,DL_PORT AND isIPv4 AND isTcpUdp AND Key(KD_4Tuple, KeyID=1) == FLM_DISCARD
+
+// Forward allowed flows between ports
+Assign[StreamId=Drop; DestinationPort=DL_PORT] = Port==UL_PORT AND isIPv4 AND isTcpUdp AND Key(KD_4Tuple, KeyID=1) == FLM_FORWARD
+Assign[StreamId=Drop; DestinationPort=UL_PORT] = Port==DL_PORT AND isIPv4 AND isTcpUdp AND Key(KD_4Tuple, KeyID=1) == FLM_FORWARD
+
