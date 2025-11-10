@@ -1,10 +1,10 @@
 # Download the setup files
 
-1. Download `cento-demo` files from GitHub:
+1. Download `cento-demo` files from GitHub
 
 	`# curl -L https://github.com/tourko/cento-demo/archive/refs/heads/main.zip -o cento-demo.zip`
 
-2. Convert `zip` to `tar.gz`:
+2. Convert `zip` to `tar.gz`
 
 	`# unzip cento-demo.zip -d demo && mv demo/cento-demo-* demo/cento && tar -czf cento-demo.tar.gz -C demo cento && rm -rf demo`
 
@@ -68,7 +68,7 @@
 
 2. **[Optional]** Obtain `pf_ring` and `cento` licenses from nTop.
 
-	Without the licenses the setup will run for 5 minutes and then stops.
+	Without the licenses the setup runs for 5 minutes and then stops.
 
 	Put the licenses in the files in the `/opt/cento/licenses` folder:
 

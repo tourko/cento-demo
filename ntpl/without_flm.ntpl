@@ -16,9 +16,11 @@ Define STREAMS = Macro("(0..$MAX_STREAM)")
 
 Setup[NUMANode=NUMA] = StreamId==STREAMS
 
+// Tx port number is the first 3 bits of the NtDyn1Descr_s->color at offset 138 (0b000XXX)
+// Tx pass/drop verdict is bit 4 of the NtDyn1Descr_s->color at offset 141 (0b00X000)
 Setup[TxDescriptor=DYN; TxPorts=UL_PORT,DL_PORT; TxPortPos=138; TxIgnorePos=141] = StreamId==STREAMS
 
-// Set TX pass/drop verdict, which is bit 4 of the NtDyn1Descr_s->color
+// Set the default TX verdict, which is bit 4 of the NtDyn1Descr_s->color
 Assign[ColorMask=TX_FORWARD; Descriptor=DYN1] = Port==UL_PORT,DL_PORT
 
 // Set TX port value, which is the fist 3 bits of the NtDyn1Descr_s->color
@@ -27,4 +29,3 @@ Assign[ColorMask=UL_PORT; Descriptor=DYN1] = Port==DL_PORT
 
 // Uplink and downlink packets for the same flow from both ports will end up in the same stream
 Assign[StreamId=STREAMS; Descriptor=DYN1] = Port==UL_PORT,DL_PORT
-

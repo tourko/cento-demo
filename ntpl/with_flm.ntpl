@@ -31,7 +31,7 @@ Setup[NUMANode=NUMA] = StreamId == STREAMS
 
 // Tx port number is the first 3 bits of the NtDyn1Descr_s->color at offset 138 (0b000XXX)
 // Tx pass/drop verdict is bit 4 of the NtDyn1Descr_s->color at offset 141 (0b00X000)
-// FLM hit/miss/unhandled is the last 2 bits of the NtDyn1Descr_s->colod at offset 142 (0bXX0000)
+// FLM hit/miss/unhandled is the last 2 bits of the NtDyn1Descr_s->color at offset 142 (0bXX0000)
 Setup[TxDescriptor=DYN; TxPorts=UL_PORT,DL_PORT; TxPortPos=138; TxIgnorePos=141] = StreamId==STREAMS
 
 // Set TX port value, which is the fist 3 bits of the NtDyn1Descr_s->color
