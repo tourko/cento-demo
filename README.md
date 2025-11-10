@@ -2,15 +2,21 @@
 
 1. Download `cento-demo` files from GitHub
 
-	`# curl -L https://github.com/tourko/cento-demo/archive/refs/heads/main.zip -o cento-demo.zip`
+	```
+	curl -L https://github.com/tourko/cento-demo/archive/refs/heads/main.zip -o cento-demo.zip
+	```
 
 2. Convert `zip` to `tar.gz`
 
-	`# unzip cento-demo.zip -d demo && mv demo/cento-demo-* demo/cento && tar -czf cento-demo.tar.gz -C demo cento && rm -rf demo`
+	```
+	unzip cento-demo.zip -d demo && mv demo/cento-demo-* demo/cento && tar -czf cento-demo.tar.gz -C demo cento && rm -rf demo
+	```
 
 3. Unpack `cento_demo.tar.gz` to `/opt/cento`
 
-	`# tar -xzvf cento_demo.tar.gz -C /opt`
+	```
+	tar -xzvf cento_demo.tar.gz -C /opt
+	```
 
 # Install and start Napatech driver
 
@@ -29,15 +35,21 @@
 
 	Example:
 
-	`# ln -s /opt/cento/ntservice/NT400D11.ini /opt/napatech3/config/ntservice.ini`
+	```
+	ln -s /opt/cento/ntservice/NT400D11.ini /opt/napatech3/config/ntservice.ini
+	```
 
 4. Start the `ntservice`
 
-	`# systemctl start ntservice`
+	```
+	systemctl start ntservice
+	```
 
 5. Verify that the `ntsevice` is running
 
-	`# systemctl status ntservice`
+	```
+	systemctl status ntservice
+	```
 
 	Expected output:
 
@@ -64,7 +76,9 @@
 
 1. Change the folder to `/opt/cento`
 
-	`# cd /opt/cento`
+	```
+	cd /opt/cento
+	```
 
 2. **[Optional]** Obtain `pf_ring` and `cento` licenses from nTop.
 
@@ -72,35 +86,49 @@
 
 	Put the licenses in the files in the `/opt/cento/licenses` folder:
 
-	`# echo "<pfring license key>" > /opt/cento/licenses/pf_ring.license`
+	```
+	echo "<pfring license key>" > /opt/cento/licenses/pf_ring.license
+	```
 
-	`# echo "<cento license key>" > /opt/cento/licenses/cento.license`
+	```
+	echo "<cento license key>" > /opt/cento/licenses/cento.license
+	```
 
 3. Build the containder
 
 	* If you don't have `pfring` license:
 
-		`# podman build --tag cento:1.0`
+		```
+		podman build --tag cento:1.0
+		```
 
 	* If you have `pfring` license, specify the `PFRING_SN=<SN>` as a build argument:
 
-		`# podman build --tag cento:1.0 --build-arg PFRING_SN=000-0000-00-00-0000-000000 .`
+		```
+		podman build --tag cento:1.0 --build-arg PFRING_SN=000-0000-00-00-0000-000000 .
+		```
 
 ## Run the container
 
 1. Get `ntop.repo` file
 
-	`# curl https://packages.ntop.org/centos/ntop.repo > /etc/yum.repos.d/ntop.repo`
+	```
+	curl https://packages.ntop.org/centos/ntop.repo > /etc/yum.repos.d/ntop.repo
+	```
 
 2. Install `pfring-dkms`
 
 	On Fedora:
 
-	`# dnf install pfring-dkms --releasever=9`
+	```
+	dnf install pfring-dkms --releasever=9
+	```
 
 	On RHEL, Centos, Rocky:
 
-	`# dnf install pfring-dkms`
+	```
+	dnf install pfring-dkms
+	```
 
 3. **[Optional]** Edit `cento-bridge` configuration
 
@@ -110,8 +138,12 @@
 
 	* With **4 worker threads** and the **HW flow offload**:
 
-		`# scripts/start_container.sh --threads 4 --flow-offload`
+		```
+		scripts/start_container.sh --threads 4 --flow-offload
+		```
 
 	* With **16 worker threads** and without **HW flow offload**:
 
-		`# scripts/start_container.sh --threads 16`
+		```
+		scripts/start_container.sh --threads 16
+		```
