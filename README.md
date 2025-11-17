@@ -24,8 +24,11 @@
 
 2. Upgrade the FPGA firmware on the SmartNIC/DPU to the following versions or newer:
 
-	F2070X   2x100G : 200-9586-68-01-00
-	NT400D11 2x100G : 200-9583-67-08-00
+	| SmartNIC/DPU | Link speed | Min FW vesion     |
+	|--------------|------------|-------------------|
+	| F2070X       | 2x100 Gbps | 200-9586-68-01-00 |
+	| NT400D11     | 2x100 Gbps | 200-9583-67-08-00 |
+
 
 2. Add `ntservice` to the `systemd`
 
