@@ -28,19 +28,18 @@
 	|--------------|------------|-------------------|
 	| F2070X       | 2x100 Gbps | 200-9586-68-01-00 |
 	| NT400D11     | 2x100 Gbps | 200-9583-67-08-00 |
-
-
-2. Add `ntservice` to the `systemd`
+	
+3. Add `ntservice` to the `systemd`
 
 	Follow the instructions in the `/opt/napatech3/share/napatech/systemd/ntservice.service` file.
 
-3. Remove `ntservice.ini` file if it exists
+4. Remove `ntservice.ini` file if it exists
 
 	```
 	rm -f /opt/napatech3/config/ntservice.ini
 	```
 
-4. Link `ntservice.ini` to the `.ini` file matching your SmartNIC/DPU:
+5. Link `ntservice.ini` to the `.ini` file matching your SmartNIC/DPU:
 
 	The following `.ini` files are provided:
 
@@ -53,13 +52,13 @@
 	ln -s /opt/cento/ntservice/NT400D11.ini /opt/napatech3/config/ntservice.ini
 	```
 
-5. Start the `ntservice`
+6. Start the `ntservice`
 
 	```
 	systemctl start ntservice
 	```
 
-6. Verify that the `ntsevice` is running
+7. Verify that the `ntsevice` is running
 
 	```
 	systemctl status ntservice
