@@ -15,18 +15,29 @@
 3. Unpack `cento_demo.tar.gz` to `/opt/cento`
 
 	```
-	tar -xzvf cento_demo.tar.gz -C /opt
+	tar -xzvf cento-demo.tar.gz -C /opt
 	```
 
 # Install and start Napatech driver
 
-1. Install Napatech driver following Napatech's Linux Installation Guide
+1. Install the latest Napatech driver following Napatech's Linux Installation Guide
+
+2. Upgrade the FPGA firmware on the SmartNIC/DPU to the following versions or newer:
+
+	F2070X   2x100G : 200-9586-68-01-00
+	NT400D11 2x100G : 200-9583-67-08-00
 
 2. Add `ntservice` to the `systemd`
 
 	Follow the instructions in the `/opt/napatech3/share/napatech/systemd/ntservice.service` file.
 
-3. Link `ntservice.ini` to a the `.ini` file matching your SmartNIC/DPU:
+3. Remove `ntservice.ini` file if it exists
+
+	```
+	rm -f /opt/napatech3/config/ntservice.ini
+	```
+
+4. Link `ntservice.ini` to the `.ini` file matching your SmartNIC/DPU:
 
 	The following `.ini` files are provided:
 
@@ -39,13 +50,13 @@
 	ln -s /opt/cento/ntservice/NT400D11.ini /opt/napatech3/config/ntservice.ini
 	```
 
-4. Start the `ntservice`
+5. Start the `ntservice`
 
 	```
 	systemctl start ntservice
 	```
 
-5. Verify that the `ntsevice` is running
+6. Verify that the `ntsevice` is running
 
 	```
 	systemctl status ntservice
@@ -65,9 +76,9 @@
 		CGroup: /system.slice/ntservice.service
 				└─99040 /opt/napatech3/bin/ntservice -d -f /opt/napatech3/config/ntservice.ini
 
-	Oct 24 12:46:43 sm-xeond ntservice[99040]: ********************************************************************
-	Oct 24 12:46:43 sm-xeond ntservice[99040]: *                NTService is now operational.                     *
-	Oct 24 12:46:43 sm-xeond ntservice[99040]: ********************************************************************
+	Oct 24 12:46:43 sm-xeond ntservice[99040]: ***************************************
+	Oct 24 12:46:43 sm-xeond ntservice[99040]: *    NTService is now operational.    *
+	Oct 24 12:46:43 sm-xeond ntservice[99040]: ***************************************
 	```
 
 # Running nTop `cento` in a `podman` container
@@ -99,7 +110,7 @@
 	* If you don't have `pfring` license:
 
 		```
-		podman build --tag cento:1.0
+		podman build --tag cento:1.0 .
 		```
 
 	* If you have `pfring` license, specify the `PFRING_SN=<SN>` as a build argument:
@@ -118,13 +129,14 @@
 
 2. Install `pfring-dkms`
 
-	On Fedora:
+	On F2070X and F3070X running Fedora 37:
 
 	```
-	dnf install pfring-dkms --releasever=9
+	dnf install dkms
+	dnf --releasever=9 --disablerepo="*" --enablerepo=ntop --enablerepo=ntop-noarch install pfring-dkms
 	```
 
-	On RHEL, Centos, Rocky:
+	On other platforms running RHEL, Centos, Rocky, etc.:
 
 	```
 	dnf install pfring-dkms
