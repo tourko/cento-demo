@@ -20,20 +20,20 @@
 
 # Install and start Napatech driver
 
-1. Install the latest Napatech driver following Napatech's Linux Installation Guide
+1. Install the latest [Link-Capture™ Software package](https://www.napatech.com/download-center/#Capture-Linux) following Napatech's [Software Installation for Linux Guide](https://docs.napatech.com/r/Software-Installation-for-Linux)
 
 2. Upgrade the FPGA firmware on the SmartNIC/DPU to the following versions or newer:
 
 	| SmartNIC/DPU | Link speed | Min FW vesion     |
 	|--------------|------------|-------------------|
-	| F2070X       | 2x100 Gbps | 200-9586-68-01-00 |
+	| F2070X       | 2x100 Gbps | 200-9586-68-03-00 |
 	| NT400D11     | 2x100 Gbps | 200-9583-67-08-00 |
 	
 3. Add `ntservice` to the `systemd`
 
 	Follow the instructions in the `/opt/napatech3/share/napatech/systemd/ntservice.service` file.
 
-4. Remove `ntservice.ini` file if it exists
+4. Remove the deafult `ntservice.ini` file if it exists
 
 	```
 	rm -f /opt/napatech3/config/ntservice.ini
@@ -43,8 +43,8 @@
 
 	The following `.ini` files are provided:
 
-	* `/opt/cento/ntservice/NT400D11.ini`
 	* `/opt/cento/ntservice/F2070X.ini`
+	* `/opt/cento/ntservice/NT400D11.ini`
 
 	Example:
 

@@ -51,4 +51,3 @@ Assign[StreamId=Drop] = Port==UL_PORT,DL_PORT AND isIPv4 AND isTcpUdp AND Key(KD
 // Forward allowed flows between ports
 Assign[StreamId=Drop; DestinationPort=DL_PORT] = Port==UL_PORT AND isIPv4 AND isTcpUdp AND Key(KD_4Tuple, KeyID=1) == FLM_FORWARD
 Assign[StreamId=Drop; DestinationPort=UL_PORT] = Port==DL_PORT AND isIPv4 AND isTcpUdp AND Key(KD_4Tuple, KeyID=1) == FLM_FORWARD
-
