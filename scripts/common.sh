@@ -2,7 +2,7 @@
 
 # Get the name of the script
 SCRIPT="${SCRIPT:=$(basename ${BASH_SOURCE[0]})}"
-VERSION="${VERSION:='1.0.0'}"
+VERSION="${VERSION:='1.1.0'}"
 
 # Print a colored message to stdout or stderr
 function print {
@@ -10,11 +10,13 @@ function print {
     local NORM=$(tput sgr0)
     local RED=$(tput setaf 1)
     local YELLOW=$(tput setaf 11)
+    local GREEN=$(tput setaf 10)
     local GREY=$(tput setaf 8)
 
     case "$1" in
         "ERR") echo "${RED}Error: $2${NORM}" >&2 ;;
-	"NTC") echo "${YELLOW}$2${NORM}" ;;
+	    "NTC") echo "${YELLOW}$2${NORM}" ;;
+	    "INF") echo "${GREEN}$2${NORM}" ;;
         "DBG") echo "${GREY}$2${NORM}" ;;
         *) echo "$1" >&1
     esac
@@ -91,4 +93,3 @@ while true; do
 	  ;;
   esac
 done
-

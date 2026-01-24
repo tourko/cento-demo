@@ -4,13 +4,14 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Get the name of the script
 SCRIPT="${SCRIPT:=$(basename ${BASH_SOURCE[0]})}"
-VERSION='1.0.0'
+VERSION='1.1.0'
 
 CENTO_CONFIG_DIR="/opt/cento/config"
 
 # Default options
 THREADS=1
 declare -i FLOW_OFFLOAD=0
+declare -i TERMINATE_FLOWS=0
 
 # Usage description
 function usage {
@@ -22,15 +23,16 @@ function usage {
     print "${BOLD}${SCRIPT} [--flow-offload] [-t | --threads N] [-h | --help] [-v | --version]${NORM}"
     print
     print "Command line option:"
-    print "${BOLD}--flow-offload${NORM}                Run cento-bridge with the HW flow offload."
-    print "${BOLD}-t, --threads N${NORM}               Distribute packet processing over N threads."
-    print "${BOLD}-h, --help${NORM}                    Display this help and exit."
-    print "${BOLD}-v, --version${NORM}                 Output version information and exit."
+    print "${BOLD}--flow-offload${NORM}                	Run cento-bridge with the HW flow offload."
+    print "${BOLD}--terminate-flows${NORM}              Remove or keep flow records, when flows terminate."
+    print "${BOLD}-t, --threads N${NORM}               	Distribute packet processing over N threads."
+    print "${BOLD}-h, --help${NORM}                    	Display this help and exit."
+    print "${BOLD}-v, --version${NORM}                 	Output version information and exit."
     print
 }
 
 SHORT_OPTIONS="t:"
-LONG_OPTIONS="flow-offload,threads:"
+LONG_OPTIONS="flow-offload,terminate-flows,threads:"
 
 source ${SCRIPT_DIR}/common.sh
 
@@ -47,9 +49,13 @@ while true; do
 	  shift 2
 	  ;;
       --flow-offload)
-          FLOW_OFFLOAD=1
-          shift
-          ;;
+      FLOW_OFFLOAD=1
+      shift
+      ;;
+      --terminate-flows)
+	  TERMINATE_FLOWS=1
+	  shift
+	  ;;
       --)
 	  shift
 	  break
@@ -93,21 +99,20 @@ if [ $? -ne 0 ]; then
 fi
 
 # Run cento-bridge
+CENTO_CMD=(cento-bridge
+--interface nt:stream[0-${max_stream}],nt:0
+--dpi-level 2
+--bridge-conf ${CENTO_CONFIG_DIR}/rules.conf
+--blacklist ${CENTO_CONFIG_DIR}/blacklist.txt
+--tx-offload
+--hw-timestamp)
+
 if (( FLOW_OFFLOAD )); then
-    PF_RING_FLOW_OFFLOAD_AUTO_UNLEARN=0 cento-bridge \
-	--interface nt:stream[0-${max_stream}],nt:0 \
-	--dpi-level 2 \
-	--bridge-conf ${CENTO_CONFIG_DIR}/rules.conf \
-	--blacklist ${CENTO_CONFIG_DIR}/blacklist.txt \
-	--tx-offload --hw-timestamp \
-	--flow-offload
-else
-    cento-bridge \
-        --interface nt:stream[0-${max_stream}],nt:0 \
-        --dpi-level 2 \
-        -w 1024000 -W 2048000 \
-        --bridge-conf ${CENTO_CONFIG_DIR}/rules.conf \
-	--blacklist ${CENTO_CONFIG_DIR}/blacklist.txt \
-	--tx-offload --hw-timestamp
+    CENTO_CMD=(PF_RING_FLOW_OFFLOAD_AUTO_UNLEARN=${TERMINATE_FLOWS} ${CENTO_CMD[@]} --flow-offload)
 fi
 
+print
+print INF "# ${CENTO_CMD[*]}"
+print
+
+eval "${CENTO_CMD[@]}"
