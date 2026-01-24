@@ -144,14 +144,19 @@
 
 4. Start the container
 
+	* With **16 worker threads** and without **HW flow offload**:
+
+		```
+		scripts/start_container.sh --threads 16
+		```
 	* With **4 worker threads** and the **HW flow offload**:
 
 		```
 		scripts/start_container.sh --threads 4 --flow-offload
 		```
 
-	* With **16 worker threads** and without **HW flow offload**:
+	* To see all available options:
 
 		```
-		scripts/start_container.sh --threads 16
+		scripts/start_container.sh --help
 		```

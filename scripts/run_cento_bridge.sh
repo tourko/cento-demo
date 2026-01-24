@@ -11,7 +11,7 @@ CENTO_CONFIG_DIR="/opt/cento/config"
 # Default options
 THREADS=1
 declare -i FLOW_OFFLOAD=0
-declare -i TERMINATE_FLOWS=0
+declare -i REMOVE_TERMINATED_FLOWS=0
 
 # Usage description
 function usage {
@@ -20,14 +20,14 @@ function usage {
     local BOLD=$(tput bold)
 
     print
-    print "${BOLD}${SCRIPT} [--flow-offload] [-t | --threads N] [-h | --help] [-v | --version]${NORM}"
+    print "${BOLD}${SCRIPT} [--flow-offload] [--remove-terminated-flows] [-t | --threads N] [-h | --help] [-v | --version]${NORM}"
     print
     print "Command line option:"
-    print "${BOLD}--flow-offload${NORM}                	Run cento-bridge with the HW flow offload."
-    print "${BOLD}--terminate-flows${NORM}              Remove or keep flow records, when flows terminate."
-    print "${BOLD}-t, --threads N${NORM}               	Distribute packet processing over N threads."
-    print "${BOLD}-h, --help${NORM}                    	Display this help and exit."
-    print "${BOLD}-v, --version${NORM}                 	Output version information and exit."
+    print "${BOLD}--flow-offload${NORM}             Run cento-bridge with the SmartNIC flow offload."
+    print "${BOLD}--remove-terminated-flows${NORM}  Remove flow records from the SmartNIC's flow table, when the flows terminate."
+    print "${BOLD}-t, --threads N${NORM}            Distribute packet processing over N threads."
+    print "${BOLD}-h, --help${NORM}                 Display this help and exit."
+    print "${BOLD}-v, --version${NORM}              Output version information and exit."
     print
 }
 
@@ -52,8 +52,8 @@ while true; do
       FLOW_OFFLOAD=1
       shift
       ;;
-      --terminate-flows)
-	  TERMINATE_FLOWS=1
+      --remove-terminated-flows)
+	  REMOVE_TERMINATED_FLOWS=1
 	  shift
 	  ;;
       --)
@@ -108,7 +108,7 @@ CENTO_CMD=(cento-bridge
 --hw-timestamp)
 
 if (( FLOW_OFFLOAD )); then
-    CENTO_CMD=(PF_RING_FLOW_OFFLOAD_AUTO_UNLEARN=${TERMINATE_FLOWS} ${CENTO_CMD[@]} --flow-offload)
+    CENTO_CMD=(PF_RING_FLOW_OFFLOAD_AUTO_UNLEARN=${REMOVE_TERMINATED_FLOWS} ${CENTO_CMD[@]} --flow-offload)
 fi
 
 print
