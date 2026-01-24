@@ -32,7 +32,7 @@ function usage {
 }
 
 SHORT_OPTIONS="t:"
-LONG_OPTIONS="flow-offload,terminate-flows,threads:"
+LONG_OPTIONS="flow-offload,remove-terminated-flows,threads:"
 
 source ${SCRIPT_DIR}/common.sh
 
