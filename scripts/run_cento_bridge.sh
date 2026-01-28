@@ -43,27 +43,27 @@ done
 
 # Process options
 while true; do
-  case "$1" in
-      -t|--threads)
-	  THREADS="$2"
-	  shift 2
-	  ;;
-      --flow-offload)
-      FLOW_OFFLOAD=1
-      shift
-      ;;
-      --remove-terminated-flows)
-	  REMOVE_TERMINATED_FLOWS=1
-	  shift
-	  ;;
-      --)
-	  shift
-	  break
-	  ;;
-      *)
-	  break
-	  ;;
-  esac
+    case "$1" in
+        -t|--threads)
+        THREADS="$2"
+        shift 2
+        ;;
+        --flow-offload)
+        FLOW_OFFLOAD=1
+        shift
+        ;;
+        --remove-terminated-flows)
+        REMOVE_TERMINATED_FLOWS=1
+        shift
+        ;;
+        --)
+        shift
+        break
+        ;;
+        *)
+        break
+        ;;
+    esac
 done
 
 # Check that the number of threads is a positive integer value

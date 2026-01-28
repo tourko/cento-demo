@@ -72,24 +72,24 @@ eval set -- "${options}"
 
 # Process common options
 while true; do
-  case "$1" in
-      -h|--help)
-	  usage
-	  exit 0
-	  shift
-	  ;;
-      -v|--version)
-	  version;
-	  exit 0;
-	  shift
-	  ;;
-      --)
-	  shift
-	  break
-	  ;;
-      *)
-	  # Unrecognised; pass through unchanged
-	  break
-	  ;;
-  esac
+    case "$1" in
+        -h|--help)
+        usage
+        exit 0
+        shift
+        ;;
+        -v|--version)
+        version;
+        exit 0;
+        shift
+        ;;
+        --)
+        shift
+        break
+        ;;
+        *)
+        # Unrecognised; pass through unchanged
+        break
+        ;;
+    esac
 done

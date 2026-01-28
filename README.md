@@ -20,7 +20,7 @@
 
 	| SmartNIC/DPU | Link speed | Min FW vesion     |
 	|--------------|------------|-------------------|
-	| F2070X       | 2x100 Gbps | 200-9586-68-03-00 |
+	| F2070X       | 2x100 Gbps | 200-9586-68-04-00 |
 	| NT400D11     | 2x100 Gbps | 200-9583-67-08-00 |
 	
 3. Add `ntservice` to the `systemd`

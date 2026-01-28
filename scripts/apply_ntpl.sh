@@ -14,21 +14,21 @@ VARS=""
 
 # Usage description
 function usage {
-  # Fonts decorators
-  local NORM=$(tput sgr0)
-  local BOLD=$(tput bold)
+    # Fonts decorators
+    local NORM=$(tput sgr0)
+    local BOLD=$(tput bold)
 
-  print
-  print "${BOLD}${SCRIPT} [-V | --vars var1=value1[,...]] [-h | --help] [-v | --version] <file>${NORM}"
-  print
-  print "Arguments:"
-  print "${BOLD}<file>${NORM}                        A path to the NTPL file."
-  print
-  print "Command line option:"
-  print "${BOLD}-V, --vars var1=value1[,...]${NORM}  A list of variables and their values."
-  print "${BOLD}-h, --help${NORM}                    Display this help and exit."
-  print "${BOLD}-v, --version${NORM}                 Output version information and exit."
-  print
+    print
+    print "${BOLD}${SCRIPT} [-V | --vars var1=value1[,...]] [-h | --help] [-v | --version] <file>${NORM}"
+    print
+    print "Arguments:"
+    print "${BOLD}<file>${NORM}                        A path to the NTPL file."
+    print
+    print "Command line option:"
+    print "${BOLD}-V, --vars var1=value1[,...]${NORM}  A list of variables and their values."
+    print "${BOLD}-h, --help${NORM}                    Display this help and exit."
+    print "${BOLD}-v, --version${NORM}                 Output version information and exit."
+    print
 }
 
 # Function to parse a comma-separated key-value string into an associative array
@@ -84,19 +84,19 @@ done
 
 # Process options
 while true; do
-  case "$1" in
-      -V|--vars)
-          VARS="$2"
-	  shift 2
-	  ;;
-      --)
-	  shift
-	  break
-	  ;;
-      *)
-	  break
-	  ;;
-  esac
+    case "$1" in
+        -V|--vars)
+            VARS="$2"
+        shift 2
+        ;;
+        --)
+        shift
+        break
+        ;;
+        *)
+        break
+        ;;
+    esac
 done
 
 FILE="$1"
@@ -148,31 +148,31 @@ while IFS= read -r line; do
 
     # Apply the NTPL line
     if [[ -n "$line" ]]; then
-	modified_line="$line"
-	# Check if the line contains any of the keys from var_array and replace it with the associated value
+        modified_line="$line"
+        # Check if the line contains any of the keys from var_array and replace it with the associated value
         for key in "${!vars_array[@]}"; do
             modified_line=$(echo "$modified_line" | sed "s/\$$key/${vars_array[$key]}/g")
         done
 
-	ntpl_output=$("$NTPL_CMD" -e "$modified_line")
-	if [ $? -ne 0 ]; then
-	   print ERR "Something is wrong in the NTPL '$modified_line'"
-	   print
-	   print "NTPL error details:"
-	   while IFS= read -r ntpl_output_line; do
-	      if [[ "$ntpl_output_line" =~ ^\>\>\> ]]; then
-	         print DBG "$ntpl_output_line"
-              fi
-           done <<< "$ntpl_output"
-	   print
-	   exit 1
-	fi
-	
-	if [ "$line" != "$modified_line" ]; then
-	    print NTC "$modified_line"
-	else
-	    print "$line"
-	fi
+        ntpl_output=$("$NTPL_CMD" -e "$modified_line")
+        if [ $? -ne 0 ]; then
+            print ERR "Something is wrong in the NTPL '$modified_line'"
+            print
+            print "NTPL error details:"
+            while IFS= read -r ntpl_output_line; do
+                if [[ "$ntpl_output_line" =~ ^\>\>\> ]]; then
+                    print DBG "$ntpl_output_line"
+                fi
+            done <<< "$ntpl_output"
+            print
+            exit 1
+        fi
+        
+        if [ "$line" != "$modified_line" ]; then
+            print NTC "$modified_line"
+        else
+            print "$line"
+        fi
     fi
 done < "$FILE"
 
