@@ -128,7 +128,7 @@
 	On F2070X and F3070X running Fedora 37:
 
 	```
-	dnf install dkms
+	dnf install hiredis numactl dkms
 	dnf --releasever=9 --disablerepo="*" --enablerepo=ntop --enablerepo=ntop-noarch install pfring-dkms
 	```
 
