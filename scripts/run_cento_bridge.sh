@@ -102,6 +102,7 @@ fi
 CENTO_CMD=(cento-bridge
 --interface nt:stream[0-${max_stream}],nt:0
 --dpi-level 2
+--zmq tcp://127.0.0.1:5556
 --bridge-conf ${CENTO_CONFIG_DIR}/rules.conf
 --blacklist ${CENTO_CONFIG_DIR}/blacklist.txt
 --tx-offload
