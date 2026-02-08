@@ -20,16 +20,16 @@ RUN mkdir -p /etc/pf_ring/
 ADD licenses/pf_ring.license /etc/pf_ring/$PFRING_SN
 ADD licenses/cento.license /etc/cento.license
 
-RUN mkdir -p /opt/cento/ntpl
-RUN mkdir -p /opt/cento/scripts
+RUN mkdir -p /opt/ntop/cento/ntpl
+RUN mkdir -p /opt/ntop/cento/scripts
 
-ADD ntpl/*.ntpl /opt/cento/ntpl
+ADD ntpl/*.ntpl /opt/ntop/cento/ntpl
 
-ADD scripts/common.sh /opt/cento/scripts
-ADD scripts/apply_ntpl.sh /opt/cento/scripts
-ADD scripts/run_cento_bridge.sh /opt/cento/scripts
-ADD scripts/run.sh /opt/cento/scripts
-RUN chmod +x /opt/cento/scripts/run.sh
+ADD scripts/common.sh /opt/ntop/cento/scripts
+ADD scripts/apply_ntpl.sh /opt/ntop/cento/scripts
+ADD scripts/run_cento_bridge.sh /opt/ntop/cento/scripts
+ADD scripts/run.sh /opt/ntop/cento/scripts
+RUN chmod +x /opt/ntop/cento/scripts/run.sh
 
 WORKDIR /opt/ntop/cento
 
