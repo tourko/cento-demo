@@ -20,9 +20,8 @@ RUN mkdir -p /etc/pf_ring/
 ADD licenses/pf_ring.license /etc/pf_ring/$PFRING_SN
 ADD licenses/cento.license /etc/cento.license
 
-RUN mkdir /opt/cento
-RUN mkdir /opt/cento/ntpl
-RUN mkdir /opt/cento/scripts
+RUN mkdir -p /opt/cento/ntpl
+RUN mkdir -p /opt/cento/scripts
 
 ADD ntpl/*.ntpl /opt/cento/ntpl
 
@@ -32,6 +31,6 @@ ADD scripts/run_cento_bridge.sh /opt/cento/scripts
 ADD scripts/run.sh /opt/cento/scripts
 RUN chmod +x /opt/cento/scripts/run.sh
 
-WORKDIR /opt/cento
+WORKDIR /opt/ntop/cento
 
-ENTRYPOINT ["/opt/cento/scripts/run.sh"]
+ENTRYPOINT ["/opt/ntop/cento/scripts/run.sh"]

@@ -1,0 +1,62 @@
+# podman kube play --replace --publish 8080:3000 cento-demo-pod.yaml
+#
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cento-demo
+spec:
+  hostIPC: true              # Equivalent to --ipc=host
+  restartPolicy: Never
+
+  containers:
+    - name: redis
+      image: docker.io/library/redis
+
+    - name: ntopng
+      image: ntopng:latest
+      ports:
+        - containerPort: 3000
+
+    - name: cento
+      image: cento:latest
+
+      args:
+        - "--threads"
+        - "16"
+
+      securityContext:
+        privileged: true
+
+      volumeMounts:
+        - mountPath: /dev/nt3gd
+          name: dev-nt3gd
+        - mountPath: /var/run/napatech
+          name: napatech-run
+        - mountPath: /opt/napatech3/lib
+          name: napatech-lib
+        - mountPath: /opt/napatech3/bin
+          name: napatech-bin
+        - mountPath: /opt/ntop/cento/config
+          name: cento-config
+
+  volumes:
+    - name: dev-nt3gd
+      hostPath:
+        path: /dev/nt3gd
+        type: CharDevice         
+    - name: napatech-run
+      hostPath:
+        path: /var/run/napatech
+        type: Directory
+    - name: napatech-lib
+      hostPath:
+        path: /opt/napatech3/lib
+        type: Directory
+    - name: napatech-bin
+      hostPath:
+        path: /opt/napatech3/bin
+        type: Directory
+    - name: cento-config
+      hostPath:
+        path: /opt/ntop/cento/config
+        type: Directory

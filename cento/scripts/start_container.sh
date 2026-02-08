@@ -11,5 +11,5 @@ podman run -it --rm \
 	-v /opt/napatech3/lib:/opt/napatech3/lib \
 	-v /opt/napatech3/bin:/opt/napatech3/bin \
 	-v /opt/cento/config:/opt/cento/config \
-	localhost/cento:1.0 "$@"
+	localhost/cento:latest "$@"
 

@@ -106,7 +106,7 @@
 	* If you don't have `pfring` license:
 
 		```
-		podman build --tag cento:1.0 .
+		podman build --tag cento:latest .
 		```
 
 	* If you have `pfring` license, specify the `PFRING_SN=<SN>` as a build argument:

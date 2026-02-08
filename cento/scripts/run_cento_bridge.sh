@@ -6,7 +6,8 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SCRIPT="${SCRIPT:=$(basename ${BASH_SOURCE[0]})}"
 VERSION='1.1.0'
 
-CENTO_CONFIG_DIR="/opt/cento/config"
+CENTO_DIR="/opt/ntop/cento"
+CENTO_CONFIG_DIR="${CENTO_DIR}/config"
 
 # Default options
 THREADS=1
@@ -85,9 +86,9 @@ max_stream=$((num_streams-1))
 
 # Choose NTPL file depending on whether flow offload is enabled
 if (( FLOW_OFFLOAD )); then
-    ntpl_file=/opt/cento/ntpl/with_flm.ntpl
+    ntpl_file="${CENTO_DIR}/with_flm.ntpl"
 else
-    ntpl_file=/opt/cento/ntpl/without_flm.ntpl
+    ntpl_file="${CENTO_DIR}/without_flm.ntpl"
 fi
 
 # Apply the NTPL
