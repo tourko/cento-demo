@@ -86,9 +86,9 @@ max_stream=$((num_streams-1))
 
 # Choose NTPL file depending on whether flow offload is enabled
 if (( FLOW_OFFLOAD )); then
-    ntpl_file="${CENTO_DIR}/with_flm.ntpl"
+    ntpl_file="${CENTO_DIR}/ntpl/with_flm.ntpl"
 else
-    ntpl_file="${CENTO_DIR}/without_flm.ntpl"
+    ntpl_file="${CENTO_DIR}/ntpl/without_flm.ntpl"
 fi
 
 # Apply the NTPL
