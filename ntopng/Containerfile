@@ -1,0 +1,24 @@
+# cat Containerfile
+# syntax=docker/dockerfile:1.2
+# check=error=true
+
+FROM rockylinux:9
+ADD https://packages.ntop.org/centos/ntop.repo /etc/yum.repos.d/ntop.repo
+RUN dnf --assumeyes install epel-release
+
+RUN dnf --assumeyes clean all
+RUN dnf --assumeyes update
+RUN dnf --assumeyes install ntopng
+RUN dnf --assumeyes clean all
+
+RUN mkdir -p /opt/ntop/ntopng/config
+RUN mkdir -p /opt/ntop/ntopng/scripts
+
+ADD config/ntopng.conf /opt/ntop/ntopng/config
+
+ADD scripts/run.sh /opt/ntop/ntopng/scripts
+RUN chmod +x /opt/ntop/ntopng/scripts/run.sh
+
+WORKDIR /opt/ntop/ntopng
+
+ENTRYPOINT ["/opt/ntop/ntopng/scripts/run.s"]
