@@ -21,4 +21,4 @@ RUN chmod +x /opt/ntop/ntopng/scripts/run.sh
 
 WORKDIR /opt/ntop/ntopng
 
-ENTRYPOINT ["/opt/ntop/ntopng/scripts/run.s"]
+ENTRYPOINT ["/opt/ntop/ntopng/scripts/run.sh"]
