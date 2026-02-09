@@ -1,1 +1,1 @@
-/opt/cento/config/ip_addresses_to_block.txt
+/opt/ntop/cento/config/ip_addresses_to_block.txt

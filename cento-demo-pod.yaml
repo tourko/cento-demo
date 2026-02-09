@@ -16,13 +16,17 @@ spec:
       image: ntopng:latest
       ports:
         - containerPort: 3000
+      volumeMounts:
+        - mountPath: /opt/ntop/ntopng/config
+          name: ntopng-config
 
     - name: cento
       image: cento:latest
 
       args:
         - "--threads"
-        - "16"
+        - "2"
+        - "--flow-offload"
 
       securityContext:
         privileged: true
@@ -59,4 +63,8 @@ spec:
     - name: cento-config
       hostPath:
         path: /opt/ntop/cento/config
+        type: Directory
+    - name: ntopng-config
+      hostPath:
+        path: /opt/ntop/ntopng/config
         type: Directory
