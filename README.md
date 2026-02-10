@@ -31,13 +31,13 @@
 
 	The following `.ini` files are provided:
 
-	* `/opt/cento/ntservice/F2070X.ini`
-	* `/opt/cento/ntservice/NT400D11.ini`
+	* `/opt/ntop/cento/ntservice/F2070X.ini`
+	* `/opt/ntop/cento/ntservice/NT400D11.ini`
 
 	Example:
 
 	```
-	ln -s /opt/cento/ntservice/NT400D11.ini /opt/napatech3/config/ntservice.ini
+	ln -s /opt/ntop/cento/ntservice/NT400D11.ini /opt/napatech3/config/ntservice.ini
 	```
 
 6. Start the `ntservice`
@@ -156,4 +156,4 @@ The following steps are **optional**. Without the licenses the setup will run fo
 	podman kube play --replace --publish 8080:3000 cento-demo-pod.yaml
 	```
 
-2. In a browser, go to `http://<host>:8080` to access `ntopng` UI
+2. In a browser, go to `http://<host>:8080` to access the `ntopng` UI
