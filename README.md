@@ -1,15 +1,9 @@
-# Download the setup files
+# Download `cento-demo` setup files
 
-1. Change the folder to `/opt`
-
-	```
-	cd /opt
-	```
-
-2. Clone `cento-demo` project from GitHub
+1. Clone `cento-demo` project from GitHub into `/opt/ntop`
 
 	```
-	git clone https://github.com/tourko/cento-demo cento
+	git clone https://github.com/tourko/cento-demo /opt/ntop
 	```
 
 # Install and start Napatech driver
@@ -77,45 +71,9 @@
 	Oct 24 12:46:43 sm-xeond ntservice[99040]: ***************************************
 	```
 
-# Running nTop `cento` in a `podman` container
+# Running `cento-demo` in a `podman` pod
 
-## Build the container
-
-1. Change the folder to `/opt/cento`
-
-	```
-	cd /opt/cento
-	```
-
-2. **[Optional]** Obtain `pf_ring` and `cento` licenses from nTop.
-
-	Without the licenses the setup runs for 5 minutes and then stops.
-
-	Put the licenses in the files in the `/opt/cento/licenses` folder:
-
-	```
-	echo "<pfring license key>" > /opt/cento/licenses/pf_ring.license
-	```
-
-	```
-	echo "<cento license key>" > /opt/cento/licenses/cento.license
-	```
-
-3. Build the containder
-
-	* If you don't have `pfring` license:
-
-		```
-		podman build --tag cento:latest .
-		```
-
-	* If you have `pfring` license, specify the `PFRING_SN=<SN>` as a build argument:
-
-		```
-		podman build --tag cento:1.0 --build-arg PFRING_SN=000-0000-00-00-0000-000000 .
-		```
-
-## Run the container
+## Install `pf_ring` on the host / SoC
 
 1. Get `ntop.repo` file
 
@@ -125,38 +83,77 @@
 
 2. Install `pfring-dkms`
 
-	On F2070X and F3070X running Fedora 37:
+- On F2070X and F3070X running Fedora 37:
 
 	```
 	dnf install hiredis numactl dkms
 	dnf --releasever=9 --disablerepo="*" --enablerepo=ntop --enablerepo=ntop-noarch install pfring-dkms
 	```
 
-	On other platforms running RHEL, Centos, Rocky, etc.:
+- On other platforms running RHEL, Centos, Rocky, etc.:
 
 	```
 	dnf install pfring-dkms
 	```
 
-3. **[Optional]** Edit `cento-bridge` configuration
+## Build the containers
 
-	The configuration file is located in `/opt/cento/config/rules.conf`.
+1. Change the folder to `/opt/ntop`
 
-4. Start the container
+	```
+	cd /opt/ntop
+	```
+2. Build `ntopng` containder
 
-	* With **16 worker threads** and without **HW flow offload**:
+	```
+	podman build --tag ntopng:latest ntopng
+	```
 
-		```
-		scripts/start_container.sh --threads 16
-		```
-	* With **4 worker threads** and the **HW flow offload**:
+3. Build `cento` containder
 
-		```
-		scripts/start_container.sh --threads 4 --flow-offload
-		```
+	```
+	podman build --tag cento:latest cento
+	```
+## Attach the nTop licenses to the containers
 
-	* To see all available options:
+The following steps are **optional**. Without the licenses the setup will run for 5 minutes and then stops.
 
-		```
-		scripts/start_container.sh --help
-		```
+1. Obtain `pf_ring`, `ntopng` and `cento` licenses from nTop
+
+2. Put the licenses in the files in the `/opt/ntop/licenses` folder
+
+- `ntopng` license:
+
+	```
+	echo "<ntopng license key>" > /opt/ntop/licenses/ntopng.license
+	```
+
+- `pfring` license:
+	```
+	echo "<pfring license key>" > /opt/cento/licenses/pf_ring.license
+	```
+
+- `cento` license:
+	```
+	echo "<cento license key>" > /opt/cento/licenses/cento.license
+	```
+
+3. Update `cento-demo-pod.yaml` with `pf_ring` license S/N
+
+	3.1. Get the S/N
+	```
+	pfcount -L -v 2 | grep napatech | head -1 | awk '{print $4}'
+	```
+	Example output: `870-0001-01-10-0000-279553`
+
+	3.2. In the `cento-demo-pod.yaml`, replace 0's in the line `/etc/pf_ring/000-0000-00-00-0000-000000` with the S/N.
+
+## Start the `cento-demo-pod`
+
+1. Start the pod
+
+	```
+	podman kube play --replace --publish 8080:3000 cento-demo-pod.yaml
+	```
+
+2. In a browser, go to `http://<host>:8080` to access `ntopng` UI

@@ -5,7 +5,7 @@ kind: Pod
 metadata:
   name: cento-demo
 spec:
-  hostIPC: true              # Equivalent to --ipc=host
+  hostIPC: true
   restartPolicy: Never
 
   containers:
@@ -19,6 +19,8 @@ spec:
       volumeMounts:
         - mountPath: /opt/ntop/ntopng/config
           name: ntopng-config
+        - mountPath: /etc/ntopng.license
+          name: ntopng-license
 
     - name: cento
       image: cento:latest
@@ -42,6 +44,11 @@ spec:
           name: napatech-bin
         - mountPath: /opt/ntop/cento/config
           name: cento-config
+        # Licenses
+        - mountPath: /etc/pf_ring/000-0000-00-00-0000-000000
+          name: pfring-license
+        - mountPath: /etc/cento.license
+          name: cento-license
 
   volumes:
     - name: dev-nt3gd
@@ -60,6 +67,7 @@ spec:
       hostPath:
         path: /opt/napatech3/bin
         type: Directory
+    # Configs
     - name: cento-config
       hostPath:
         path: /opt/ntop/cento/config
@@ -68,3 +76,16 @@ spec:
       hostPath:
         path: /opt/ntop/ntopng/config
         type: Directory
+    # Licenses
+    - name: pfring-license
+      hostPath:
+        path: /opt/ntop/licenses/pfring.license
+        type: File
+    - name: cento-license
+      hostPath:
+        path: /opt/ntop/licenses/cento.license
+        type: File
+    - name: ntopng-license
+      hostPath:
+        path: /opt/ntop/licenses/ntopng.license
+        type: File
